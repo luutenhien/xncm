@@ -1,0 +1,40 @@
+name: SimpleBrowserApp
+options:
+  bundleIdPrefix: com.simplebrowser
+  deploymentTarget:
+    iOS: "16.0"
+
+targets:
+  SimpleBrowserApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - SimpleBrowserApp
+    info:
+      path: SimpleBrowserApp/Info.plist
+      properties:
+        CFBundleDisplayName: SimpleBrowser
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.simplebrowser.app
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets: []
