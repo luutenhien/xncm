@@ -1,0 +1,52 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-ipa:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Gom file mã nguồn vào thư mục SimpleBrowserApp
+        run: |
+          mkdir -p SimpleBrowserApp
+          cp -f *.swift SimpleBrowserApp/ 2>/dev/null || true
+
+      - name: Cài đặt XcodeGen
+        run: |
+          if ! command -v xcodegen &> /dev/null; then
+            brew install xcodegen
+          fi
+
+      - name: Tạo file project Xcode tự động
+        run: xcodegen generate
+
+      - name: Biên dịch ứng dụng iOS (Unsigned)
+        run: |
+          xcodebuild clean build \
+            -project SimpleBrowserApp.xcodeproj \
+            -scheme SimpleBrowserApp \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Đóng gói thành file .ipa
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/SimpleBrowserApp.app Payload/
+          zip -r SimpleBrowserApp.ipa Payload
+
+      - name: Tải file .ipa lên mục Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimpleBrowserApp-IPA
+          path: SimpleBrowserApp.ipa
